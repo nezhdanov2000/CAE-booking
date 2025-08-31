@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Blackboard Learn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <!-- Login Panel -->
+        <div class="panel left">
+            <img src="../assets/logo.png" alt="Stamford Logo" class="logo">
+            <h2>Login to Stamford CAE</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>You are:</label>
+                    <select name="role" required>
+                        <option value="student" selected>Student</option>
+                        <option value="tutor">Tutor</option>
+                    </select>
+                </div>
+                <input type="submit" value="Sign In">
+            </form>
+            <div class="forgot"><a href="#">Forgot Password?</a></div>
+            <div id="login-message"></div>
+            <p style="margin-top:18px;">No account? <a href="register.html" style="color:#4a90e2;">Register</a></p>
+            <p style="margin-top:10px; text-align:center;">
+                <a href="../admin/login.html" style="color:#667eea; font-size:12px; text-decoration:none;">
+                    <i class="fas fa-shield-alt"></i> Admin Panel
+                </a>
+            </p>
+        </div>
+        <!-- Welcome Panel -->
+        <div class="panel center">
+            <h1>Welcome to <span style="color:#4a90e2;">CAE</span></h1>
+            <p>Welcome to the Stamford CAE Learn Portal!<br><br>
+            Dive into your courses, stay connected, and make the most of your academic journey. Let's make learning together enjoyable and productive!</p>
+            <div class="links">
+                <button class="btn">Webmail Stamford</button>
+                <button class="btn">Registration & Grading System</button>
+                <button class="btn">Self-Reset Password</button>
+            </div>
+        </div>
+        <!-- Mobile Panel -->
+        <div class="panel right">
+            <h2>Get Mobile</h2>
+            <p>Students and Instructors can now enjoy seamless access to courses, assignments, and resources anytime, anywhere. Stay connected and enhance your learning experience on the go!</p>
+            <p style="margin-top:18px;">Download the app today and take your learning journey to the next level!<br><br>
+            <b>Available today on iOS or Android</b><br>
+            (iOS 13 / Android 11 or later required)</p>
+            <div class="app-badges">
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg" alt="App Store"></a>
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play"></a>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        © 2025 Stamford International University All Rights Reserved.
+    </div>
+    <script>
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = new FormData(form);
+        const messageDiv = document.getElementById('login-message');
+        messageDiv.textContent = '';
+        try {
+            const response = await fetch('/CAE/backend/common/login.php', {
+                method: 'POST',
+                body: data
+            });
+            const text = await response.text();
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+            messageDiv.textContent = text;
+            messageDiv.style.color = 'red';
+        } catch (err) {
+            messageDiv.textContent = 'Request error';
+            messageDiv.style.color = 'red';
+        }
+    });
+    </script>
+</body>
+</html> 

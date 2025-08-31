@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Schedule - CAE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../assets/style.css?v=1.0">
+    <style>
+        .recurring-slot {
+            position: relative;
+            box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
+        }
+        
+        .recurring-slot::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 8px;
+            height: 8px;
+            background: #8e44ad;
+            border-radius: 50%;
+            border: 1px solid white;
+        }
+        
+        .recurring-slot .class-course {
+            font-weight: 600;
+        }
+        
+        .recurring-slot .class-tutor {
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .conflict-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .conflict-warning i {
+            font-size: 1.2em;
+            color: #f39c12;
+        }
+        
+        .conflict-warning p {
+            margin: 5px 0 0 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/logo.png" alt="Logo">
+                <div class="user-name" id="sidebarUserName">User</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html"><i class="fa fa-university"></i> Institution Page</a>
+                <a href="#" class="active"><i class="fa fa-calendar"></i> Schedule</a>
+                <a href="#"><i class="fa fa-user"></i> <span id="sidebarUserShort"></span></a>
+                <a href="#"><i class="fa fa-bolt"></i> Activity</a>
+                <a href="#"><i class="fa fa-book"></i> Courses</a>
+                <a href="#"><i class="fa fa-envelope"></i> Messages</a>
+                <a href="#"><i class="fa fa-graduation-cap"></i> Grades</a>
+                <a href="#"><i class="fa fa-wrench"></i> Tools</a>
+                <a href="../../backend/common/logout.php"><i class="fa fa-sign-out-alt"></i> Sign Out</a>
+            </div>
+            <div class="sidebar-footer">
+                <div>Privacy &nbsp; | &nbsp; Terms &nbsp; | &nbsp; Accessibility</div>
+            </div>
+        </nav>
+        <main class="main-content">
+            <div class="schedule-container">
+                <div class="schedule-header">
+                    <h1><i class="fa fa-calendar"></i> Weekly Schedule</h1>
+                    <div class="week-navigation">
+                        <button class="week-nav-btn" id="prevWeek">
+                            <i class="fa fa-chevron-left"></i> Previous Week
+                        </button>
+                        <div class="current-week" id="currentWeek">Week of January 1, 2024</div>
+                        <button class="week-nav-btn" id="nextWeek">
+                            Next Week <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                            <div class="schedule-grid">
+                <div id="conflictWarning" class="conflict-warning" style="display: none;">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <strong>Schedule Conflicts Detected</strong>
+                    <p>Some recurring slots have been hidden due to conflicts with regular slots.</p>
+                </div>
+                
+                <table class="schedule-table" id="scheduleTable">
+                    <thead>
+                        <tr>
+                            <th class="time-column">Time</th>
+                            <th class="day-column">Monday</th>
+                            <th class="day-column">Tuesday</th>
+                            <th class="day-column">Wednesday</th>
+                            <th class="day-column">Thursday</th>
+                            <th class="day-column">Friday</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleBody">
+                        <!-- Schedule rows will be generated here -->
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Global variables
+        let currentWeekStart = new Date();
+        let scheduleData = [];
+        
+        // Initialize the schedule
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSchedule();
+            loadUserData();
+            loadScheduleData();
+        });
+        
+        // Initialize schedule grid
+        function initializeSchedule() {
+            const scheduleBody = document.getElementById('scheduleBody');
+            if (!scheduleBody) {
+                console.error('Schedule body element not found');
+                return;
+            }
+            
+            const startHour = 8;
+            const endHour = 18;
+            const interval = 30; // 30 minutes
+            
+            scheduleBody.innerHTML = '';
+            
+            for (let hour = startHour; hour < endHour; hour++) {
+                for (let minute = 0; minute < 60; minute += interval) {
+                    const row = document.createElement('tr');
+                    
+                    // Time column
+                    const timeCell = document.createElement('td');
+                    timeCell.className = 'time-column';
+                    timeCell.textContent = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    row.appendChild(timeCell);
+                    
+                    // Day columns
+                    for (let day = 0; day < 5; day++) {
+                        const dayCell = document.createElement('td');
+                        dayCell.className = 'schedule-cell';
+                        dayCell.dataset.day = day;
+                        dayCell.dataset.time = `${hour}:${minute.toString().padStart(2, '0')}`;
+                        dayCell.dataset.minutes = (hour * 60 + minute).toString();
+                        row.appendChild(dayCell);
+                    }
+                    
+                    scheduleBody.appendChild(row);
+                }
+            }
+            
+            updateWeekDisplay();
+        }
+        
+        // Load user data
+        function loadUserData() {
+            fetch('../../backend/common/dashboard.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    document.getElementById('sidebarUserName').textContent = data.name + ' ' + data.surname;
+                    document.getElementById('sidebarUserShort').textContent = data.name;
+                })
+                .catch(error => {
+                    console.error('Error loading user data:', error);
+                    // Set default values if user data fails to load
+                    document.getElementById('sidebarUserName').textContent = 'User';
+                    document.getElementById('sidebarUserShort').textContent = 'User';
+                });
+        }
+        
+        // Load schedule data from backend
+        function loadScheduleData() {
+            const weekStart = getWeekStart(currentWeekStart);
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 4);
+            
+
+            
+            const params = new URLSearchParams({
+                week_start: weekStart.toISOString().split('T')[0],
+                week_end: weekEnd.toISOString().split('T')[0]
+            });
+            
+            fetch(`../../backend/common/schedule.php?${params}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Check if data is an array (success) or has error property
+                    if (Array.isArray(data)) {
+                        scheduleData = data;
+                        
+                        // Check if there are any recurring slots (to show conflict warning if needed)
+                        const hasRecurringSlots = data.some(item => item.is_recurring);
+                        const hasRegularSlots = data.some(item => !item.is_recurring);
+                        
+                        // Show conflict warning if we have both types of slots
+                        if (hasRecurringSlots && hasRegularSlots) {
+                            document.getElementById('conflictWarning').style.display = 'flex';
+                        } else {
+                            document.getElementById('conflictWarning').style.display = 'none';
+                        }
+                        
+                        renderSchedule();
+                    } else if (data.error) {
+                        throw new Error(data.error);
+                    } else {
+                        // If data is not an array and has no error, treat as empty schedule
+                        scheduleData = [];
+                        document.getElementById('conflictWarning').style.display = 'none';
+                        renderSchedule();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading schedule:', error);
+                    // Show error message in the first row without replacing the entire table
+                    const firstRow = document.querySelector('#scheduleBody tr:first-child');
+                    if (firstRow) {
+                        firstRow.innerHTML = `
+                            <td class="time-column">08:00</td>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: #e74c3c; background: rgba(231,76,60,0.1);">
+                                <i class="fa fa-exclamation-triangle" style="font-size: 2em; margin-bottom: 10px; color: #e74c3c;"></i><br>
+                                <strong>Failed to load schedule data</strong><br>
+                                <small style="color: #999;">Error: ${error.message}</small><br>
+                                <small style="color: #999;">Please check your connection and try again.</small>
+                            </td>
+                        `;
+                    }
+                });
+        }
+        
+
+        
+        // Render schedule
+        function renderSchedule() {
+            // Check if schedule grid exists
+            const scheduleBody = document.getElementById('scheduleBody');
+            if (!scheduleBody || scheduleBody.children.length === 0) {
+                console.error('Schedule grid not initialized');
+                return;
+            }
+            
+            // Clear existing classes and restore grid structure
+            const rows = scheduleBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                // Restore the original grid structure for each row
+                const timeCell = row.querySelector('.time-column');
+                if (timeCell) {
+                    const timeText = timeCell.textContent;
+                    row.innerHTML = `
+                        <td class="time-column">${timeText}</td>
+                        <td class="schedule-cell" data-day="0" data-time="${timeText}" data-minutes="${timeToMinutes(timeText)}"></td>
+                        <td class="schedule-cell" data-day="1" data-time="${timeText}" data-minutes="${timeToMinutes(timeText)}"></td>
+                        <td class="schedule-cell" data-day="2" data-time="${timeText}" data-minutes="${timeToMinutes(timeText)}"></td>
+                        <td class="schedule-cell" data-day="3" data-time="${timeText}" data-minutes="${timeToMinutes(timeText)}"></td>
+                        <td class="schedule-cell" data-day="4" data-time="${timeText}" data-minutes="${timeToMinutes(timeText)}"></td>
+                    `;
+                }
+            });
+            
+            // Check if we have data
+            if (!scheduleData || scheduleData.length === 0) {
+                // Show message for empty schedule in the first row
+                const firstRow = document.querySelector('#scheduleBody tr:first-child');
+                if (firstRow) {
+                    // Clear the first row and show empty message
+                    firstRow.innerHTML = `
+                        <td class="time-column">08:00</td>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #888; background: rgba(255,255,255,0.05);">
+                            <i class="fa fa-calendar-times" style="font-size: 2em; margin-bottom: 10px; color: #ccc;"></i><br>
+                            <strong>No classes scheduled for this week</strong><br>
+                            <small style="color: #999;">The schedule is currently empty for the selected week.</small>
+                        </td>
+                    `;
+                }
+                return;
+            }
+            
+            // Render each class
+            scheduleData.forEach(classItem => {
+                const classBlock = createClassBlock(classItem);
+                const dayCells = document.querySelectorAll(`[data-day="${classItem.day}"]`);
+                
+                if (dayCells.length > 0) {
+                    // Find the best cell for this class based on start time
+                    const startTime = classItem.start_time;
+                    const targetCell = findBestCellForTime(dayCells, startTime);
+                    
+                    if (targetCell) {
+                        targetCell.appendChild(classBlock);
+                    }
+                }
+            });
+        }
+        
+        // Find the best cell for a given time
+        function findBestCellForTime(dayCells, startTime) {
+            const startMinutes = timeToMinutes(startTime);
+            
+            // First try to find exact match
+            let targetCell = Array.from(dayCells).find(cell => {
+                return cell.dataset.time === startTime;
+            });
+            
+            // If no exact match, find the closest cell
+            if (!targetCell) {
+                let minDiff = Infinity;
+                let bestCell = null;
+                
+                dayCells.forEach(cell => {
+                    const cellMinutes = parseInt(cell.dataset.minutes);
+                    const diff = Math.abs(cellMinutes - startMinutes);
+                    
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        bestCell = cell;
+                    }
+                });
+                
+                targetCell = bestCell;
+            }
+            
+            return targetCell;
+        }
+        
+        // Create a class block element
+        function createClassBlock(classItem) {
+            const block = document.createElement('div');
+            block.className = 'class-block';
+            
+            // Add special styling for recurring slots
+            if (classItem.is_recurring) {
+                block.className += ' recurring-slot';
+                block.style.backgroundColor = classItem.color || '#9b59b6';
+                block.style.border = '2px solid #8e44ad';
+                block.style.borderRadius = '8px';
+            } else {
+                block.style.backgroundColor = classItem.color || '#4a90e2';
+            }
+            
+            const duration = calculateDuration(classItem.start_time, classItem.end_time);
+            const height = Math.max(40, duration * 1.5); // 1 minute = 1.5px height
+            block.style.height = `${height}px`;
+            
+            // Calculate offset if the class doesn't start at exact grid time
+            const startMinutes = timeToMinutes(classItem.start_time);
+            const cellMinutes = Math.floor(startMinutes / 30) * 30; // Round to nearest 30-minute interval
+            const offsetMinutes = startMinutes - cellMinutes;
+            
+            if (offsetMinutes > 0) {
+                const offsetPixels = offsetMinutes * 1.5; // 1 minute = 1.5px
+                block.style.marginTop = `${offsetPixels}px`;
+                block.style.height = `${height - offsetPixels}px`;
+            }
+            
+            // Add recurring indicator
+            const recurringIcon = classItem.is_recurring ? '<i class="fa fa-refresh" style="margin-right: 5px; font-size: 0.8em;"></i>' : '';
+            
+            block.innerHTML = `
+                <div class="class-course">${recurringIcon}${classItem.course}</div>
+                <div class="class-tutor">${classItem.tutor_name}</div>
+            `;
+            
+            // Add tooltip with more details
+            const slotType = classItem.is_recurring ? ' (Recurring)' : '';
+            block.title = `${classItem.course}${slotType}\n${classItem.tutor_name}\n${classItem.start_time} - ${classItem.end_time}`;
+            
+            return block;
+        }
+        
+        // Calculate duration in minutes
+        function calculateDuration(startTime, endTime) {
+            const start = new Date(`2000-01-01 ${startTime}`);
+            const end = new Date(`2000-01-01 ${endTime}`);
+            return (end - start) / (1000 * 60);
+        }
+        
+        // Convert time string to minutes since midnight
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+        
+        // Get week start (Monday)
+        function getWeekStart(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            // JavaScript: 0=Sunday, 1=Monday, 2=Tuesday, ..., 6=Saturday
+            // We want to get to the previous Monday
+            const daysToSubtract = day === 0 ? 6 : day - 1;
+            d.setDate(d.getDate() - daysToSubtract);
+            return d;
+        }
+        
+        // Update week display
+        function updateWeekDisplay() {
+            const weekStart = getWeekStart(currentWeekStart);
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 4);
+            
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            const startStr = weekStart.toLocaleDateString('en-US', options);
+            const endStr = weekEnd.toLocaleDateString('en-US', options);
+            
+            document.getElementById('currentWeek').textContent = `Week of ${startStr}`;
+        }
+        
+        // Navigation event listeners
+        document.getElementById('prevWeek').addEventListener('click', function() {
+            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+            updateWeekDisplay();
+            loadScheduleData();
+        });
+        
+        document.getElementById('nextWeek').addEventListener('click', function() {
+            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+            updateWeekDisplay();
+            loadScheduleData();
+        });
+        
+        // Initialize current week to start of current week
+        currentWeekStart = getWeekStart(new Date());
+    </script>
+</body>
+</html> 

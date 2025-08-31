@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your timeslots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="panel">
+            <h2>Your timeslots</h2>
+            <div id="slots">Loading...</div>
+            <div class="main-menu-link">
+                <a href="../common/dashboard.html">Main menu</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        function loadSlots() {
+            fetch('../../backend/tutor/slots.php')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('slots');
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        container.innerHTML = '<p>No created slots</p>';
+                        return;
+                    }
+
+                    let html = '<table><tr><th>Date</th><th>Start</th><th>End</th><th>Course</th><th></th></tr>';
+                    data.forEach(slot => {
+                        html += `<tr>
+                            <td>${slot.Date}</td>
+                            <td>${slot.Start_Time}</td>
+                            <td>${slot.End_Time}</td>
+                            <td>${slot.Course_name}</td>
+                            <td><button onclick="deleteSlot(${slot.Timeslot_ID})">Delete</button></td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+
+                    container.innerHTML = html;
+                });
+        }
+
+        function deleteSlot(id) {
+            if (!confirm('Are you sure you want to delete this slot?')) return;
+
+            fetch('../../backend/tutor/delete_slot.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'timeslot_id=' + encodeURIComponent(id)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    loadSlots(); // reload the table
+                } else {
+                    alert('Error deleting');
+                }
+            });
+        }
+
+        window.onload = loadSlots;
+    </script>
+</body>
+</html> 

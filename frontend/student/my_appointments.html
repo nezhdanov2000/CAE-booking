@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments - CAE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/logo.png" alt="Stamford Logo" class="logo">
+                <h3>CAE Portal</h3>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a>
+                <a href="create_slot.html"><i class="fa fa-plus"></i> Create Slot</a>
+                <a href="tutor_slots.html"><i class="fa fa-list"></i> My Slots</a>
+                <a href="my_appointments.html" class="active"><i class="fa fa-users"></i> My Appointments</a>
+            </div>
+            <div class="sidebar-footer">
+                <p>© 2025 Stamford International University</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h1>My Appointments</h1>
+                <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+            </header>
+
+            <div class="content">
+                <div id="appointments-container">
+                    <div class="loading">Loading your appointments...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Load tutor's appointments
+        fetch('../../backend/tutor/appointments.php')
+            .then(res => res.json())
+            .then(appointments => {
+                const container = document.getElementById('appointments-container');
+                if (appointments.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fa fa-calendar-times"></i><h3>No appointments found</h3><p>No students have enrolled in your slots yet.</p></div>';
+                    return;
+                }
+
+                container.innerHTML = appointments.map(appointment => `
+                    <div class="appointment-card">
+                        <div class="appointment-info">
+                            <h3>${appointment.Student_Name}</h3>
+                            <p><i class="fa fa-calendar"></i> ${appointment.Date}</p>
+                            <p><i class="fa fa-clock"></i> ${appointment.Start_Time} - ${appointment.End_Time}</p>
+                            <p><i class="fa fa-book"></i> ${appointment.Course_name}</p>
+                        </div>
+                        <div class="appointment-actions">
+                            <span class="status enrolled">Enrolled</span>
+                        </div>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                console.error('Error loading appointments:', err);
+                document.getElementById('appointments-container').innerHTML = '<div class="error">Error loading appointments</div>';
+            });
+    </script>
+</body>
+</html> 

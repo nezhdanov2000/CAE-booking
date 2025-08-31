@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="panel">
+            <h2>Your Booked Timeslots</h2>
+            <div id="my-slots">Loading...</div>
+            <div class="main-menu-link">
+                <a href="../common/dashboard.html">Main Menu</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        function loadMySlots() {
+            fetch('../../backend/student/my_slots.php')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('my-slots');
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        container.innerHTML = '<p>You have no bookings.</p>';
+                        return;
+                    }
+
+                    let html = '<table><tr><th>Date</th><th>Start</th><th>End</th><th>Course</th><th>Tutor</th><th></th></tr>';
+                    data.forEach(slot => {
+                        html += `<tr>
+                            <td>${slot.Date}</td>
+                            <td>${slot.Start_Time}</td>
+                            <td>${slot.End_Time}</td>
+                            <td>${slot.Course_name}</td>
+                            <td>${slot.Tutor_Name}</td>
+                            <td><button onclick="unenroll(${slot.Timeslot_ID})">Cancel</button></td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    container.innerHTML = html;
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('my-slots').innerHTML = '<p>Loading error</p>';
+                });
+        }
+
+        function unenroll(timeslotId) {
+            if (!confirm('Are you sure you want to cancel the booking?')) return;
+
+            fetch('../../backend/student/unenroll.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'timeslot_id=' + encodeURIComponent(timeslotId)
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response.success) {
+                    loadMySlots(); // update the table
+                } else {
+                    alert(response.error || 'Error while cancelling');
+                }
+            });
+        }
+
+        window.onload = loadMySlots;
+    </script>
+</body>
+</html> 
