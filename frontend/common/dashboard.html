@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/logo.png" alt="Logo">
+                <div class="user-name" id="sidebarUserName">User</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="#" class="active"><i class="fa fa-university"></i> Institution Page</a>
+                <a href="schedule.html"><i class="fa fa-calendar"></i> Schedule</a>
+                <a href="#"><i class="fa fa-user"></i> <span id="sidebarUserShort"></span></a>
+                <a href="#"><i class="fa fa-bolt"></i> Activity</a>
+                <a href="#"><i class="fa fa-book"></i> Courses</a>
+                <a href="#"><i class="fa fa-envelope"></i> Messages</a>
+                <a href="#"><i class="fa fa-graduation-cap"></i> Grades</a>
+                <a href="#"><i class="fa fa-wrench"></i> Tools</a>
+                <a href="../../backend/common/logout.php"><i class="fa fa-sign-out-alt"></i> Sign Out</a>
+            </div>
+            <div class="sidebar-footer">
+                <div>Privacy &nbsp; | &nbsp; Terms &nbsp; | &nbsp; Accessibility</div>
+            </div>
+        </nav>
+        <main class="main-content">
+            <div class="welcome-card">
+                <h2>Welcome, <span id="userName"></span>!</h2>
+                <p>You are logged in as <span class="role-badge" id="userRole"></span>.</p>
+                <p>This is a demo version of the CAE website. Currently, the following basic functions are available:</p>
+                <ul>
+                    <li>Creating and managing time slots for tutors.</li>
+                    <li>Booking available slots for students.</li>
+                    <li>Viewing and managing appointments.</li>
+                </ul>
+                <p>Full functionality will be added soon. Thank you for your patience and support!</p>
+                <p>Special thanks to Mohammadamin Dadras for his mentorship and guidance.</p>
+                <div id="tutorLinks" class="links-block" style="display: none;">
+                    <a href="../tutor/create_slot.html">Create Slot</a>
+                    <a href="../tutor/create_recurring_slots.html">Create Recurring Slots</a>
+                    <a href="../tutor/manage_recurring_slots.html">Manage Recurring Slots</a>
+                    <a href="../tutor/tutor_slots.html">My Slots</a>
+                    <a href="../tutor/tutors_slots.html">All Slots</a>
+                    <a href="../tutor/my_appointments.html">Who Will Come</a>
+                </div>
+                <div id="studentLinks" class="links-block" style="display: none;">
+                    <a href="../student/student_slots.html">Available Bookings</a>
+                    <a href="../student/student_my_slots.html">My Bookings</a>
+                </div>
+                <a href="../../backend/common/logout.php" class="logout-link">Logout</a>
+    </div>
+        </main>
+    </div>
+    <script>
+        // Fetch user data from the backend
+        fetch('../../backend/common/dashboard.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('userName').textContent = data.name + ' ' + data.surname;
+                document.getElementById('userRole').textContent = data.role === 'student' ? 'student' : 'tutor';
+                document.getElementById('sidebarUserName').textContent = data.name + ' ' + data.surname;
+                document.getElementById('sidebarUserShort').textContent = data.name;
+                // Show appropriate links depending on the role
+                if (data.role === 'student') {
+                    document.getElementById('studentLinks').style.display = 'flex';
+                } else {
+                    document.getElementById('tutorLinks').style.display = 'flex';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.href = 'login.html';
+            });
+    </script>
+</body>
+</html> 

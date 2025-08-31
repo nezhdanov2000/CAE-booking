@@ -1,0 +1,600 @@
+/* Unified Modern UI Styles for CAE Frontend */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+.logo {
+    width: 100px;
+    margin: 0 auto;
+}
+
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 0;
+}
+.container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.panel {
+    background: rgba(20, 20, 20, 0.85);
+    color: #fff;
+    border-radius: 12px;
+    margin: 20px;
+    padding: 32px 28px;
+    min-width: 320px;
+    max-width: 540px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.panel h2, .panel h1 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    text-align: center;
+}
+.form-group {
+    margin-bottom: 18px;
+}
+label {
+    font-size: 1rem;
+    margin-bottom: 6px;
+    display: block;
+}
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+input[type="time"],
+select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+input[type="submit"], button[type="submit"], .btn {
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+input[type="submit"]:hover, button[type="submit"]:hover, .btn:hover {
+    background: #357ab8;
+}
+.forgot {
+    margin-top: 10px;
+    text-align: right;
+}
+.forgot a {
+    color: #fff;
+    text-decoration: underline;
+    font-size: 0.95rem;
+}
+.panel .links {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.panel .links .btn {
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+}
+.panel .links .btn:hover {
+    background: #444;
+}
+.app-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    justify-content: center;
+}
+.app-badges img {
+    height: 40px;
+}
+.copyright {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    color: #fff;
+    background: rgba(0,0,0,0.7);
+    text-align: center;
+    font-size: 0.95rem;
+    padding: 8px 0 4px 0;
+    z-index: 2;
+}
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 8px;
+    overflow: hidden;
+}
+th, td {
+    padding: 10px 8px;
+    text-align: center;
+}
+th {
+    background: #4a90e2;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+tr:nth-child(even) {
+    background: rgba(255,255,255,0.08);
+}
+tr:nth-child(odd) {
+    background: rgba(255,255,255,0.02);
+}
+button:not([type="submit"]) {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+button:not([type="submit"]):hover {
+    background: #4a90e2;
+}
+button.delete, button.cancel {
+    background: #e53e3e;
+}
+button.delete:hover, button.cancel:hover {
+    background: #b91c1c;
+}
+/* Message blocks */
+.register-message, .slot-message, #enroll-message, #error-message, #no-appointments {
+    min-height: 22px;
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 1rem;
+}
+/* Links */
+.login-link, .main-menu-link {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 0.98rem;
+}
+.login-link a, .main-menu-link a {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: 500;
+}
+.login-link a:hover, .main-menu-link a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 700px) {
+    .container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .panel {
+        min-width: 90vw;
+        max-width: 98vw;
+        padding: 18px 6vw;
+    }
+    .panel.left {
+        margin: 0 auto;
+        margin-top: 50px;
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    table, th, td {
+        font-size: 0.98rem;
+    }
+}
+
+/* Dashboard styles */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+.sidebar {
+    background: #23272f;
+    color: #fff;
+    width: 240px;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 0 24px 0;
+    box-shadow: 2px 0 16px rgba(0,0,0,0.07);
+}
+.sidebar-header {
+    padding: 28px 0 18px 0;
+    text-align: center;
+    border-bottom: 1px solid #333a47;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.sidebar-header img {
+    width: 150px;
+    height: 100px;
+    margin-bottom: 8px;
+}
+.sidebar-header .user-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 8px;
+}
+.sidebar-menu {
+    flex: 1;
+    margin-top: 18px;
+}
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 12px 32px 12px 28px;
+    font-size: 1.05rem;
+    border-left: 4px solid transparent;
+    transition: background 0.15s, color 0.15s, border 0.15s;
+}
+.sidebar-menu a.active, .sidebar-menu a:hover {
+    background: #1e222a;
+    color: #fff;
+    border-left: 4px solid #4a90e2;
+}
+.sidebar-menu .fa {
+    width: 22px;
+    text-align: center;
+    font-size: 1.15rem;
+}
+.sidebar-footer {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #94a3b8;
+}
+.sidebar-footer a {
+    color: #94a3b8;
+    text-decoration: underline;
+    font-size: 0.95rem;
+}
+.main-content {
+    flex: 1;
+    padding: 38px 6vw 32px 6vw;
+    background: #f4f6fa;
+    min-width: 0;
+}
+.welcome-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(60, 60, 120, 0.08);
+    padding: 32px 28px 24px 28px;
+    margin-bottom: 32px;
+}
+.welcome-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 2rem;
+    color: #23272f;
+}
+.welcome-card p {
+    margin: 0 0 18px 0;
+    color: #4a5568;
+}
+.role-badge {
+    display: inline-block;
+    background: #cae3ff;
+    color: #000000;
+    border-radius: 8px;
+    padding: 4px 14px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 8px;
+}
+.links-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+.links-block a {
+    display: inline-block;
+    background: #6366f1;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 1.08rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(60, 60, 120, 0.07);
+    transition: background 0.18s;
+}
+.links-block a:hover {
+    background: #4a90e2;
+}
+.logout-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #e53e3e;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+.logout-link:hover {
+    text-decoration: underline;
+}
+@media (max-width: 900px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100vw;
+        min-width: 0;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0;
+        overflow-x: auto;
+        border-bottom: 1px solid #333a47;
+    }
+    .sidebar-header, .sidebar-footer {
+        display: none;
+    }
+    .sidebar-menu {
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        margin: 0;
+        width: 100vw;
+    }
+    .sidebar-menu a {
+        flex: 1;
+        justify-content: center;
+        padding: 14px 0;
+        font-size: 1.1rem;
+        border-left: none;
+        border-bottom: 4px solid transparent;
+    }
+    .sidebar-menu a.active, .sidebar-menu a:hover {
+        border-left: none;
+        border-bottom: 4px solid #4a90e2;
+    }
+}
+@media (max-width: 600px) {
+    .main-content {
+        padding: 18px 2vw 18px 2vw;
+    }
+    .welcome-card {
+        padding: 18px 8px 14px 8px;
+    }
+    .links-block a {
+        padding: 10px 8vw;
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 701px) {
+    .container {
+        flex-direction: row;
+    }
+    .panel {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+    .panel.center {
+        order: 1;
+    }
+    .panel.left {
+        order: 2;
+    }
+    .panel.right {
+        order: 3;
+    }
+} 
+
+/* Schedule styles */
+.schedule-container {
+    padding: 20px !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+}
+
+.schedule-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+    background: rgba(20, 20, 20, 0.85) !important;
+    padding: 20px !important;
+    border-radius: 12px !important;
+    color: white !important;
+}
+
+.week-navigation {
+    display: flex !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.week-nav-btn {
+    background: #4a90e2 !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 15px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    transition: background 0.2s !important;
+}
+
+.week-nav-btn:hover {
+    background: #357ab8 !important;
+}
+
+.week-nav-btn:disabled {
+    background: #666 !important;
+    cursor: not-allowed !important;
+}
+
+.current-week {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+}
+
+.schedule-grid {
+    background: rgba(20, 20, 20, 0.85) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25) !important;
+}
+
+.schedule-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    color: white !important;
+}
+
+.schedule-table th,
+.schedule-table td {
+    border: 1px solid #444 !important;
+    padding: 8px !important;
+    text-align: center !important;
+    vertical-align: top !important;
+    position: relative !important;
+}
+
+.schedule-table th {
+    background: #333 !important;
+    font-weight: bold !important;
+    padding: 12px 8px !important;
+}
+
+.time-column {
+    background: #2a2a2a !important;
+    font-weight: bold !important;
+    width: 80px !important;
+    min-width: 80px !important;
+}
+
+.day-column {
+    background: #2a2a2a !important;
+    font-weight: bold !important;
+    width: 120px !important;
+    min-width: 120px !important;
+}
+
+.schedule-cell {
+    height: 20px !important;
+    position: relative !important;
+    background: #1a1a1a !important;
+}
+
+.class-block {
+    position: absolute !important;
+    left: 2px !important;
+    right: 2px !important;
+    background: linear-gradient(135deg, #4a90e2, #357ab8) !important;
+    border-radius: 4px !important;
+    padding: 4px 6px !important;
+    font-size: 0.8rem !important;
+    color: white !important;
+    font-weight: bold !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    z-index: 10 !important;
+    cursor: pointer !important;
+    top: 0 !important;
+}
+
+.class-block:hover {
+    background: linear-gradient(135deg, #357ab8, #2d5a8a) !important;
+    transform: scale(1.02) !important;
+    transition: all 0.2s ease !important;
+}
+
+.class-course {
+    font-weight: bold !important;
+    margin-bottom: 2px !important;
+}
+
+.class-tutor {
+    font-size: 0.7rem !important;
+    opacity: 0.9 !important;
+}
+
+.loading {
+    text-align: center !important;
+    padding: 40px !important;
+    color: white !important;
+    font-size: 1.2rem !important;
+}
+
+.no-classes {
+    text-align: center !important;
+    padding: 20px !important;
+    color: #888 !important;
+    font-style: italic !important;
+}
+
+@media (max-width: 1200px) {
+    .schedule-container {
+        padding: 10px;
+    }
+    
+    .schedule-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .schedule-table {
+        font-size: 0.9rem;
+    }
+    
+    .time-column,
+    .day-column {
+        width: 60px;
+        min-width: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .schedule-table {
+        font-size: 0.8rem;
+    }
+    
+    .schedule-cell {
+        height: 15px;
+    }
+    
+    .class-block {
+        font-size: 0.7rem;
+        padding: 2px 4px;
+    }
+} 

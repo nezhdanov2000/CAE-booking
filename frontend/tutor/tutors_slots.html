@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Timeslots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="panel">
+            <h2>Select a Course</h2>
+            <form id="filter-form">
+                <select id="course-select" name="course_id">
+                    <!-- courses will appear automatically -->
+                </select>
+                <button type="submit">Show</button>
+            </form>
+            <h2>Available Timeslots</h2>
+            <div id="slots"></div>
+            <div class="main-menu-link">
+                <a href="../common/dashboard.html">Main menu</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Load the list of courses
+        fetch('../../backend/common/courses.php')
+            .then(res => res.json())
+            .then(courses => {
+                const select = document.getElementById('course-select');
+                courses.forEach(course => {
+                    const opt = document.createElement('option');
+                    opt.value = course.Course_ID;
+                    opt.textContent = course.Course_name;
+                    select.appendChild(opt);
+                });
+            });
+
+        document.getElementById('filter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const courseId = document.getElementById('course-select').value;
+            fetch('../../backend/common/tutors_slots.php?course_id=' + courseId)
+                .then(res => res.json())
+                .then(slots => {
+                    const container = document.getElementById('slots');
+                    if (slots.length === 0) {
+                        container.innerHTML = '<p>No available slots.</p>';
+                        return;
+                    }
+
+                    let html = '<table><tr><th>Date</th><th>Start</th><th>End</th><th>Tutor</th></tr>';
+                    slots.forEach(slot => {
+                        html += `<tr>
+                            <td>${slot.Date}</td>
+                            <td>${slot.Start_Time}</td>
+                            <td>${slot.End_Time}</td>
+                            <td>${slot.Tutor_Name}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    container.innerHTML = html;
+                });
+        });
+    </script>
+</body>
+</html> 

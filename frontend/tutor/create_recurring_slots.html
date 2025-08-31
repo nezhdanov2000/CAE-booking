@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Recurring Slots - CAE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        .recurring-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            max-width: 600px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group select,
+        .form-group input[type="time"],
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .submit-btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px;
+            display: none;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/logo.png" alt="Logo">
+                <div class="user-name" id="sidebarUserName">User</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="../common/dashboard.html"><i class="fa fa-university"></i> Institution Page</a>
+                <a href="../common/schedule.html"><i class="fa fa-calendar"></i> Schedule</a>
+                <a href="#"><i class="fa fa-user"></i> <span id="sidebarUserShort"></span></a>
+                <a href="#"><i class="fa fa-bolt"></i> Activity</a>
+                <a href="#"><i class="fa fa-book"></i> Courses</a>
+                <a href="#"><i class="fa fa-envelope"></i> Messages</a>
+                <a href="#"><i class="fa fa-graduation-cap"></i> Grades</a>
+                <a href="#"><i class="fa fa-wrench"></i> Tools</a>
+                <a href="../../backend/common/logout.php"><i class="fa fa-sign-out-alt"></i> Sign Out</a>
+            </div>
+            <div class="sidebar-footer">
+                <div>Privacy &nbsp; | &nbsp; Terms &nbsp; | &nbsp; Accessibility</div>
+            </div>
+        </nav>
+        <main class="main-content">
+            <a href="../common/dashboard.html" class="back-link">
+                <i class="fa fa-arrow-left"></i> Back to Dashboard
+            </a>
+            
+            <div class="recurring-form">
+                <h2><i class="fa fa-calendar-plus"></i> Create Recurring Slots</h2>
+                <p>Create regular weekly slots that will automatically repeat every week.</p>
+                
+                <form id="recurringForm">
+                    <div class="form-group">
+                        <label for="course">Course Name:</label>
+                        <input type="text" id="course" name="course" placeholder="Enter course name (e.g., Mathematics, Physics)" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dayOfWeek">Day of Week:</label>
+                        <select id="dayOfWeek" name="dayOfWeek" required>
+                            <option value="">Select day</option>
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                            <option value="sunday">Sunday</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startTime">Start Time:</label>
+                        <input type="time" id="startTime" name="startTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="endTime">End Time:</label>
+                        <input type="time" id="endTime" name="endTime" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fa fa-save"></i> Create Recurring Slot
+                    </button>
+                </form>
+            </div>
+            
+            <div id="successMessage" class="success-message">
+                <i class="fa fa-check-circle"></i> Recurring slot created successfully!
+            </div>
+            
+            <div id="errorMessage" class="error-message">
+                <i class="fa fa-exclamation-circle"></i> <span id="errorText"></span>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Fetch user data and populate sidebar
+        fetch('../../backend/common/dashboard.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('sidebarUserName').textContent = data.name + ' ' + data.surname;
+                document.getElementById('sidebarUserShort').textContent = data.name;
+                
+                // Check if user is a tutor
+                if (data.role !== 'tutor') {
+                    window.location.href = '../common/dashboard.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.href = '../common/login.html';
+            });
+        
+
+        
+        // Handle form submission
+        document.getElementById('recurringForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('../../backend/tutor/create_recurring_slot.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    document.getElementById('recurringForm').reset();
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 3000);
+                } else {
+                    document.getElementById('errorText').textContent = data.message || 'An error occurred';
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorText').textContent = 'Network error occurred';
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+            });
+        });
+        
+        // Validate time inputs
+        document.getElementById('endTime').addEventListener('change', function() {
+            const startTime = document.getElementById('startTime').value;
+            const endTime = this.value;
+            
+            if (startTime && endTime && startTime >= endTime) {
+                alert('End time must be after start time');
+                this.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Timeslots and Students</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="panel">
+            <h2>My Timeslots and Student Count</h2>
+            <div id="appointments-container">
+                <table id="appointments-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Number of Students</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointments-body"></tbody>
+                </table>
+                <div id="error-message" style="display: none;"></div>
+                <div id="no-appointments" style="display: none;">
+                    You have no created timeslots with enrolled students yet.
+                </div>
+            </div>
+            <div class="main-menu-link">
+                <a href="../common/dashboard.html">Main Menu</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        fetch('../../backend/common/dashboard.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.role !== 'tutor') {
+                    window.location.href = '../common/dashboard.html';
+                }
+            })
+            .catch(error => {
+                document.getElementById('error-message').textContent = 'Access check error';
+                document.getElementById('error-message').style.display = 'block';
+            });
+        fetch('../../backend/tutor/appointments.php')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(slots => {
+                const table = document.getElementById('appointments-table');
+                const tbody = document.getElementById('appointments-body');
+                const noAppointments = document.getElementById('no-appointments');
+                if (!slots || slots.length === 0) {
+                    noAppointments.style.display = 'block';
+                    return;
+                }
+                slots.forEach(slot => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${slot.Date}</td>
+                        <td>${slot.Start_Time}</td>
+                        <td>${slot.End_Time}</td>
+                        <td>${slot.Student_Count}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                table.style.display = 'table';
+            })
+            .catch(error => {
+                document.getElementById('error-message').textContent = 'Error loading data';
+                document.getElementById('error-message').style.display = 'block';
+            });
+    </script>
+</body>
+</html> 

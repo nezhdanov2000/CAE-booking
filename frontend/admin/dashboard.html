@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CAE System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CAE Admin Dashboard</h1>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="welcome-message">
+            <strong>Welcome to CAE Admin Panel!</strong><br>
+            This is your system administration dashboard. Here you can manage students, tutors, courses, and system settings.
+        </div>
+
+        <div class="admin-info">
+            <div class="admin-avatar" id="admin-avatar">A</div>
+            <div>
+                <div id="admin-name">Loading...</div>
+                <div style="font-size: 12px; color: #64748b;" id="admin-role">Administrator</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="students-count">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="tutors-count">0</div>
+                <div class="stat-label">Total Tutors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="courses-count">0</div>
+                <div class="stat-label">Active Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="appointments-count">0</div>
+                <div class="stat-label">Today's Appointments</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">System Parameters</h2>
+            <div class="params-grid">
+                <div class="param-card">
+                    <h3>Database Statistics</h3>
+                    <div class="param-item">
+                        <span class="param-label">Total Students:</span>
+                        <span class="param-value" id="total-students">0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Total Tutors:</span>
+                        <span class="param-value" id="total-tutors">0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Total Courses:</span>
+                        <span class="param-value" id="total-courses">0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Total Timeslots:</span>
+                        <span class="param-value" id="total-timeslots">0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Future Timeslots:</span>
+                        <span class="param-value" id="future-timeslots">0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Total Appointments:</span>
+                        <span class="param-value" id="total-appointments">0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Today's Appointments:</span>
+                        <span class="param-value" id="today-appointments">0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Total Groups:</span>
+                        <span class="param-value" id="total-groups">0</span>
+                    </div>
+                </div>
+
+                <div class="param-card">
+                    <h3>System Information</h3>
+                    <div class="param-item">
+                        <span class="param-label">PHP Version:</span>
+                        <span class="param-value" id="php-version">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">MySQL Version:</span>
+                        <span class="param-value" id="mysql-version">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Server Time:</span>
+                        <span class="param-value" id="server-time">-</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">Timezone:</span>
+                        <span class="param-value" id="timezone">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Recent Admin Actions</h2>
+            <div class="actions-list" id="recent-actions">
+                <div class="loading">Loading recent actions...</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Quick Actions</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
+                <button class="action-card" onclick="window.location.href='user_management.html'">
+                    <div style="font-size: 24px; margin-bottom: 8px;">👥</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">User Management</div>
+                    <div style="font-size: 12px; color: #64748b;">Manage students, tutors, and administrators</div>
+                </button>
+                <button class="action-card" onclick="window.location.href='course_management.html'">
+                    <div style="font-size: 24px; margin-bottom: 8px;">📚</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">Course Management</div>
+                    <div style="font-size: 12px; color: #64748b;">Manage courses and curriculum</div>
+                </button>
+                <button class="action-card" onclick="alert('Appointment Management - Coming Soon!')">
+                    <div style="font-size: 24px; margin-bottom: 8px;">📅</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">Appointment Management</div>
+                    <div style="font-size: 12px; color: #64748b;">Manage appointments and schedules</div>
+                </button>
+                <button class="action-card" onclick="alert('System Settings - Coming Soon!')">
+                    <div style="font-size: 24px; margin-bottom: 8px;">⚙️</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">System Settings</div>
+                    <div style="font-size: 12px; color: #64748b;">Configure system parameters</div>
+                </button>
+                <button class="action-card" onclick="alert('Reports & Analytics - Coming Soon!')">
+                    <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">Reports & Analytics</div>
+                    <div style="font-size: 12px; color: #64748b;">View detailed reports and analytics</div>
+                </button>
+                <button class="action-card" onclick="deleteOldTimeslots()">
+                    <div style="font-size: 24px; margin-bottom: 8px;">🗑️</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">Clean Old Timeslots</div>
+                    <div style="font-size: 12px; color: #64748b;">Delete timeslots older than 1 week</div>
+                </button>
+                <button class="action-card" onclick="runAutoCleanup()">
+                    <div style="font-size: 24px; margin-bottom: 8px;">🤖</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">Run Auto Cleanup</div>
+                    <div style="font-size: 12px; color: #64748b;">Manually trigger automatic cleanup</div>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load administrator data
+        async function loadAdminData() {
+            try {
+                const response = await fetch('/CAE/backend/admin/get_admin_data.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('admin-name').textContent = data.data.admin.name;
+                    document.getElementById('admin-role').textContent = data.data.admin.role;
+                    document.getElementById('admin-avatar').textContent = data.data.admin.name.charAt(0).toUpperCase();
+                }
+            } catch (err) {
+                console.error('Error loading admin data:', err);
+            }
+        }
+
+        // Load statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/CAE/backend/admin/get_stats.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('students-count').textContent = data.data.stats.students;
+                    document.getElementById('tutors-count').textContent = data.data.stats.tutors;
+                    document.getElementById('courses-count').textContent = data.data.stats.courses;
+                    document.getElementById('appointments-count').textContent = data.data.stats.appointments;
+                }
+            } catch (err) {
+                console.error('Error loading stats:', err);
+            }
+        }
+
+        // Load system parameters
+        async function loadSystemParams() {
+            try {
+                const response = await fetch('/CAE/backend/admin/get_system_params.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const params = data.data.params;
+                    
+                    // Update database statistics
+                    document.getElementById('total-students').textContent = params.total_students;
+                    document.getElementById('total-tutors').textContent = params.total_tutors;
+                    document.getElementById('total-courses').textContent = params.total_courses;
+                    document.getElementById('total-timeslots').textContent = params.total_timeslots;
+                    document.getElementById('future-timeslots').textContent = params.future_timeslots;
+                    document.getElementById('total-appointments').textContent = params.total_appointments;
+                    document.getElementById('today-appointments').textContent = params.today_appointments;
+                    document.getElementById('total-groups').textContent = params.total_groups;
+                    
+                    // Update system information
+                    document.getElementById('php-version').textContent = params.system_info.php_version;
+                    document.getElementById('mysql-version').textContent = params.system_info.mysql_version;
+                    document.getElementById('server-time').textContent = params.system_info.server_time;
+                    document.getElementById('timezone').textContent = params.system_info.timezone;
+                    
+                    // Update recent actions
+                    displayRecentActions(params.recent_actions);
+                }
+            } catch (err) {
+                console.error('Error loading system params:', err);
+            }
+        }
+
+        // Display recent actions
+        function displayRecentActions(actions) {
+            const container = document.getElementById('recent-actions');
+            
+            if (actions.length === 0) {
+                container.innerHTML = '<div class="no-actions">No recent actions found</div>';
+                return;
+            }
+            
+            let html = '';
+            actions.forEach(action => {
+                const date = new Date(action.Created_At).toLocaleString();
+                html += `
+                    <div class="action-item">
+                        <div class="action-header">
+                            <span class="action-admin">${action.Name} ${action.Surname}</span>
+                            <span class="action-time">${date}</span>
+                        </div>
+                        <div class="action-content">
+                            <strong>${action.Action}</strong>
+                            ${action.Details ? `<br><small>${action.Details}</small>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Delete old timeslots
+        async function deleteOldTimeslots() {
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - 7);
+            const cutoffDateStr = cutoffDate.toISOString().split('T')[0];
+            
+            if (!confirm(`Are you sure you want to delete all timeslots older than ${cutoffDateStr}?\n\nThis action will also delete:\n- Student choices for these timeslots\n- Appointments for these timeslots\n- Group joins for these timeslots\n- Tutor creates for these timeslots\n\nThis action cannot be undone!`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/CAE/backend/admin/delete_old_timeslots.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const result = data.data;
+                    let message = `✅ ${data.message}\n\n`;
+                    
+                    if (result && result.deleted_timeslots > 0) {
+                        message += `📊 Deletion Summary:\n`;
+                        message += `• Timeslots deleted: ${result.deleted_timeslots}\n`;
+                        message += `• Student choices deleted: ${result.deleted_student_choices}\n`;
+                        message += `• Appointments deleted: ${result.deleted_appointments}\n`;
+                        message += `• Group joins deleted: ${result.deleted_group_joins}\n`;
+                        message += `• Tutor creates deleted: ${result.deleted_tutor_creates}\n`;
+                        message += `• Cutoff date: ${result.cutoff_date}\n`;
+                        message += `• Total found: ${result.total_found}\n\n`;
+                    } else {
+                        message += `ℹ️ No old timeslots found to delete.\n`;
+                        message += `All timeslots are newer than ${result?.cutoff_date || '1 week ago'}.\n\n`;
+                    }
+                    
+                    alert(message);
+                    
+                    // Reload statistics and system parameters to reflect changes
+                    loadStats();
+                    loadSystemParams();
+                } else {
+                    alert(`❌ Error: ${data.error}`);
+                }
+            } catch (err) {
+                console.error('Error deleting old timeslots:', err);
+                alert('❌ An error occurred while deleting old timeslots.\n\nError details: ' + err.message + '\n\nPlease check the console for more information or try the diagnostic tool.');
+            }
+        }
+
+        // Run automatic cleanup
+        async function runAutoCleanup() {
+            if (!confirm('Are you sure you want to run the automatic cleanup?\n\nThis will delete all timeslots older than 1 week.\n\nThis action cannot be undone!')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/CAE/backend/admin/auto_cleanup_timeslots.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const result = data.data;
+                    let message = `✅ ${data.message}\n\n`;
+                    
+                    if (result && result.deleted_timeslots > 0) {
+                        message += `📊 Auto Cleanup Results:\n`;
+                        message += `• Timeslots deleted: ${result.deleted_timeslots}\n`;
+                        message += `• Student choices deleted: ${result.deleted_student_choices}\n`;
+                        message += `• Appointments deleted: ${result.deleted_appointments}\n`;
+                        message += `• Group joins deleted: ${result.deleted_group_joins}\n`;
+                        message += `• Tutor creates deleted: ${result.deleted_tutor_creates}\n`;
+                        message += `• Cutoff date: ${result.cutoff_date}\n`;
+                        message += `• Total found: ${result.total_found}\n\n`;
+                        message += `🕐 Executed at: ${data.timestamp}\n\n`;
+                    } else {
+                        message += `ℹ️ No old timeslots found to delete.\n`;
+                        message += `All timeslots are newer than ${result?.cutoff_date || '1 week ago'}.\n\n`;
+                        message += `🕐 Executed at: ${data.timestamp}\n\n`;
+                    }
+                    
+                    alert(message);
+                    
+                    // Reload statistics and system parameters to reflect changes
+                    loadStats();
+                    loadSystemParams();
+                } else {
+                    alert(`❌ Auto cleanup failed:\n${data.error || data.message}`);
+                }
+            } catch (err) {
+                console.error('Auto cleanup error:', err);
+                alert('❌ Network error or invalid JSON response.\n\nError details: ' + err.message + '\n\nPlease check the console for more information.');
+            }
+        }
+
+        // Выход из системы
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('/CAE/backend/admin/logout.php')
+                    .then(() => {
+                        window.location.href = 'login.html';
+                    })
+                    .catch(err => {
+                        console.error('Logout error:', err);
+                        window.location.href = 'login.html';
+                    });
+            }
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAdminData();
+            loadStats();
+            loadSystemParams();
+        });
+    </script>
+</body>
+</html> 

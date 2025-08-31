@@ -1,0 +1,55 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database files
+*.sql
+*.db
+*.sqlite
+
+# Configuration files with sensitive data
+config.php
+.env
+*.env
+
+# Cache files
+cache/
+*.cache
+
+# Uploaded files (if any)
+uploads/
+temp/
+
+# Backup files
+*.bak
+*.backup
+
+# Compiled files
+*.min.js
+*.min.css
+
+# Node modules (if using any build tools)
+node_modules/
+
+# Vendor directories
+vendor/
